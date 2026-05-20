@@ -370,10 +370,70 @@ function renderAudit() {
   el('gc-card').addEventListener('click', () => navigate('general-comment'));
   el('report-btn').addEventListener('click', () => navigate('report'));
   el('photos-btn').addEventListener('click', () => saveAllPhotos(insp));
-  el('pdf-btn').addEventListener('click', () => generatePDF(insp));
+  setupPdfButton('pdf-btn', insp);
 
   const editBtn = document.getElementById('edit-header-btn');
   if (editBtn) editBtn.addEventListener('click', () => navigate('setup'));
+}
+
+// ── PDF generation (two-step: build async, save on fresh tap) ────────────────
+function setupPdfButton(btnId, insp) {
+  const btn = el(btnId);
+  if (!btn) return;
+  btn.addEventListener('click', () => _preparePdf(btn, insp), { once: true });
+}
+
+async function _preparePdf(btn, insp) {
+  if (!window.jspdf || !window.jspdf.jsPDF) {
+    alert('PDF library failed to load. Reload the page and try again.');
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = 'Building…';
+  toast('Building PDF…');
+
+  let doc, filename;
+  try {
+    const inspData = await _precompressPhotos(insp);
+    ({ doc, filename } = _buildPDF(inspData));
+  } catch (err) {
+    console.error('[PDF] build error:', err);
+    btn.disabled = false;
+    btn.textContent = 'Generate PDF';
+    alert('PDF error: ' + err.message);
+    return;
+  }
+
+  const blob = doc.output('blob');
+  btn.disabled = false;
+  btn.textContent = 'Save PDF ↓';
+  toast('Ready — tap Save PDF');
+  btn.onclick = () => _savePdf(blob, filename, doc);
+}
+
+function _savePdf(blob, filename, doc) {
+  if (navigator.share && navigator.canShare) {
+    const file = new File([blob], filename, { type: 'application/pdf' });
+    if (navigator.canShare({ files: [file] })) {
+      navigator.share({ files: [file], title: filename })
+        .then(() => toast('PDF shared'))
+        .catch(err => { if (err.name !== 'AbortError') _pdfFallback(doc, filename); });
+      return;
+    }
+  }
+  _pdfFallback(doc, filename);
+}
+
+function _pdfFallback(doc, filename) {
+  const url = doc.output('bloburl');
+  const w = window.open(url, '_blank');
+  if (w) {
+    toast('PDF opened — use your browser to save');
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+  } else {
+    doc.save(filename);
+    toast('PDF saved — check Downloads');
+  }
 }
 
 // ── Photo export ──────────────────────────────────────────────────────────────
@@ -795,7 +855,7 @@ function renderReport() {
     </div>`;
 
   el('back-btn').addEventListener('click', () => navigate('audit'));
-  el('pdf-btn2').addEventListener('click', () => generatePDF(insp));
+  setupPdfButton('pdf-btn2', insp);
 }
 
 // ── Header helper ─────────────────────────────────────────────────────────────

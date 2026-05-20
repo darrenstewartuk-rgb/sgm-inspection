@@ -30,56 +30,6 @@ async function _precompressPhotos(insp) {
   return copy;
 }
 
-async function generatePDF(insp) {
-  console.log('[PDF] generatePDF called');
-
-  // Check jsPDF loaded
-  if (!window.jspdf) {
-    console.error('[PDF] window.jspdf is undefined');
-    alert('PDF library failed to load. Please reload the page (Ctrl+Shift+R) and try again.');
-    return;
-  }
-  if (!window.jspdf.jsPDF) {
-    console.error('[PDF] window.jspdf.jsPDF is undefined. Keys:', Object.keys(window.jspdf));
-    alert('PDF library loaded but jsPDF constructor not found. Check console for details.');
-    return;
-  }
-
-  console.log('[PDF] jsPDF found, building document…');
-  toast('Generating PDF…');
-
-  const inspData = await _precompressPhotos(insp);
-
-  let result;
-  try {
-    result = _buildPDF(inspData);
-    console.log('[PDF] _buildPDF completed, pages:', result.doc.getNumberOfPages());
-  } catch (err) {
-    console.error('[PDF] _buildPDF threw:', err);
-    alert('PDF generation error: ' + err.message + '\n\nSee browser console (F12) for details.');
-    return;
-  }
-
-  const { doc, filename } = result;
-  console.log('[PDF] Saving as:', filename);
-
-  // Native share sheet on mobile (requires HTTPS)
-  if (navigator.share && navigator.canShare) {
-    try {
-      const blob = doc.output('blob');
-      const file = new File([blob], filename, { type: 'application/pdf' });
-      if (navigator.canShare({ files: [file] })) {
-        await navigator.share({ files: [file], title: filename });
-        toast('PDF shared');
-        return;
-      }
-    } catch (_) { /* fall through to download */ }
-  }
-
-  doc.save(filename);
-  toast('PDF saved — check your Downloads folder');
-  console.log('[PDF] done');
-}
 
 function _imgFormat(dataUrl) {
   if (dataUrl.startsWith('data:image/png'))  return 'PNG';
