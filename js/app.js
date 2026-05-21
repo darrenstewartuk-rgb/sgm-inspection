@@ -358,6 +358,7 @@ function renderAudit() {
     </div>
     <div class="card" style="margin:12px">${sectionRows}</div>
     <div class="bottom-bar">
+      <button class="btn btn-ghost" id="home-btn-audit" style="flex:0 0 auto;padding:0 14px">&#x2302;</button>
       <button class="btn btn-secondary" id="report-btn" style="flex:1">View Report</button>
       <button class="btn btn-ghost" id="photos-btn" style="flex:1">Save Photos</button>
       <button class="btn btn-primary" id="pdf-btn" style="flex:1">Generate PDF</button>
@@ -367,6 +368,7 @@ function renderAudit() {
     card.addEventListener('click', () => navigate('section', { sectionIdx: parseInt(card.dataset.si) }));
   });
 
+  el('home-btn-audit').addEventListener('click', () => navigate('home'));
   el('gc-card').addEventListener('click', () => navigate('general-comment'));
   el('report-btn').addEventListener('click', () => navigate('report'));
   el('photos-btn').addEventListener('click', () => saveAllPhotos(insp));
@@ -845,10 +847,12 @@ function renderReport() {
     </div>
 
     <div class="bottom-bar">
+      <button class="btn btn-ghost" id="home-btn-report" style="flex:0 0 auto;padding:0 14px">&#x2302;</button>
       <button class="btn btn-secondary" style="flex:1" id="back-btn">&#x2190; Back</button>
       <button class="btn btn-primary" style="flex:1" id="pdf-btn2">Generate PDF</button>
     </div>`;
 
+  el('home-btn-report').addEventListener('click', () => navigate('home'));
   el('back-btn').addEventListener('click', () => navigate('audit'));
   setupPdfButton('pdf-btn2', insp);
 }
