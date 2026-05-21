@@ -6,7 +6,7 @@ const AUDIT_CONFIG = {
   title: 'Factory Inspection',
   defaultLocation: '1,2,3,5 and 6, Honywood Square, Honywood Rd, Basildon SS14 3HT, UK',
   defaultAssignees: ['Darren Stewart', 'Gary May', 'Dominic Mann'],
-  units: ['Unit 1', 'Unit 2', 'Unit 3', 'Unit 5', 'Unit 6', 'Customercare Office', 'Spray Room'],
+  units: ['Unit 1', 'Unit 2', 'Unit 3', 'Unit 4', 'Unit 5', 'Unit 6', 'Spray Room'],
   priorities: ['Low', 'Medium', 'High'],
 
   complianceFooter: 'This inspection supports the employer duty of care under HASAWA 1974 s.2 and the requirement for a suitable and sufficient risk assessment under MHSWR 1999 reg.3. It does not replace the judgement of a competent assessor.',

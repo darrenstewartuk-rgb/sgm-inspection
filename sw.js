@@ -1,4 +1,4 @@
-const CACHE = 'sgm-inspect-v7';
+const CACHE = 'sgm-inspect-v8';
 const ASSETS = [
   './',
   './index.html',
