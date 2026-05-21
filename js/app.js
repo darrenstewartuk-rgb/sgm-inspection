@@ -427,13 +427,8 @@ function _savePdf(blob, filename, doc) {
 }
 
 function _pdfFallback(doc, filename) {
-  const url = doc.output('bloburl');
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.click();
-  toast('PDF downloading — check Downloads');
-  setTimeout(() => URL.revokeObjectURL(url), 60000);
+  doc.save(filename);
+  toast('PDF saved — check your Downloads folder');
 }
 
 // ── Photo export ──────────────────────────────────────────────────────────────
