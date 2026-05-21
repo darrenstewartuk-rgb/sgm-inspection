@@ -412,7 +412,9 @@ async function _preparePdf(btn, insp) {
 }
 
 function _savePdf(blob, filename, doc) {
-  if (navigator.share && navigator.canShare) {
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+  if ((isStandalone || isMobile) && navigator.share && navigator.canShare) {
     const file = new File([blob], filename, { type: 'application/pdf' });
     if (navigator.canShare({ files: [file] })) {
       navigator.share({ files: [file], title: filename })
@@ -426,14 +428,12 @@ function _savePdf(blob, filename, doc) {
 
 function _pdfFallback(doc, filename) {
   const url = doc.output('bloburl');
-  const w = window.open(url, '_blank');
-  if (w) {
-    toast('PDF opened — use your browser to save');
-    setTimeout(() => URL.revokeObjectURL(url), 60000);
-  } else {
-    doc.save(filename);
-    toast('PDF saved — check Downloads');
-  }
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  toast('PDF downloading — check Downloads');
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
 }
 
 // ── Photo export ──────────────────────────────────────────────────────────────
