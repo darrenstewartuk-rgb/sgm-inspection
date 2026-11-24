@@ -1,7 +1,7 @@
 'use strict';
 
 const AUDIT_CONFIG = {
-  appVersion: '1.5',
+  appVersion: '1.6',
   company: 'SGM Window Manufacturing Ltd',
   title: 'Factory Inspection',
   defaultLocation: '1,2,3,5 and 6, Honywood Square, Honywood Rd, Basildon SS14 3HT, UK',
