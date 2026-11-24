@@ -1,4 +1,4 @@
-const CACHE = 'sgm-inspect-v8';
+const CACHE = 'sgm-inspect-v14';
 const ASSETS = [
   './',
   './index.html',
@@ -28,6 +28,6 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
   e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request))
+    fetch(e.request).then(response => { if (response.ok) { const copy = response.clone(); caches.open(CACHE).then(c => c.put(e.request, copy)); } return response; }).catch(() => caches.match(e.request))
   );
 });
