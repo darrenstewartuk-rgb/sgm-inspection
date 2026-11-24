@@ -1,7 +1,7 @@
 {
   "name": "SGM Factory Inspection",
   "short_name": "SGM Inspect",
-  "description": "SGM Window Manufacturing Ltd — Factory Inspection v1.1 audit tool",
+  "description": "SGM Window Manufacturing Ltd — Factory Inspection v1.4 audit tool",
   "start_url": "./index.html",
   "display": "standalone",
   "orientation": "portrait",
