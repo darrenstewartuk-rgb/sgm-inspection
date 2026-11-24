@@ -1,14 +1,14 @@
-const CACHE = 'sgm-inspect-v15';
+const CACHE = 'sgm-inspect-v16';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './css/styles.css',
+  './css/styles.css?v=16',
   './js/jspdf.min.js',
-  './js/config.js',
-  './js/db.js',
-  './js/app.js',
-  './js/pdf-gen.js',
+  './js/config.js?v=16',
+  './js/db.js?v=16',
+  './js/app.js?v=16',
+  './js/pdf-gen.js?v=16',
 ];
 
 self.addEventListener('install', e => {
