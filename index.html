@@ -7,14 +7,14 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="SGM Inspect">
-  <meta name="description" content="SGM Window Manufacturing Ltd — Factory Inspection v1.1">
+  <meta name="description" content="SGM Window Manufacturing Ltd — Factory Inspection v1.6">
 
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="assets/icon-192.svg">
   <link rel="icon" type="image/svg+xml" href="assets/icon-192.svg">
 
   <title>SGM Factory Inspection</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css?v=16">
 </head>
 <body>
 
@@ -28,13 +28,26 @@
   <div id="toast" role="status" aria-live="polite"></div>
 
   <script src="js/jspdf.min.js"></script>
-  <script src="js/config.js"></script>
-  <script src="js/db.js"></script>
-  <script src="js/app.js"></script>
-  <script src="js/pdf-gen.js"></script>
+  <script src="js/config.js?v=16"></script>
+  <script src="js/db.js?v=16"></script>
+  <script src="js/app.js?v=16"></script>
+  <script src="js/pdf-gen.js?v=16"></script>
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js').catch(() => {});
+      navigator.serviceWorker.register('./sw.js?v=16', { updateViaCache: 'none' })
+        .then(reg => {
+          reg.update().catch(() => {});
+          document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) reg.update().catch(() => {});
+          });
+          navigator.serviceWorker.addEventListener('controllerchange', () => {
+            // Reload once when the updated worker takes control, keeping IndexedDB intact.
+            if (sessionStorage.getItem('sgm-updated-v16') !== 'yes') {
+              sessionStorage.setItem('sgm-updated-v16', 'yes');
+              location.reload();
+            }
+          });
+        }).catch(() => {});
     }
   </script>
 </body>
