@@ -1,12 +1,12 @@
 'use strict';
 
 const AUDIT_CONFIG = {
-  appVersion: '1.1',
+  appVersion: '1.4',
   company: 'SGM Window Manufacturing Ltd',
   title: 'Factory Inspection',
   defaultLocation: '1,2,3,5 and 6, Honywood Square, Honywood Rd, Basildon SS14 3HT, UK',
   defaultAssignees: ['Darren Stewart', 'Gary May', 'Dominic Mann'],
-  units: ['Unit 1', 'Unit 2', 'Unit 3', 'Unit 4', 'Unit 5', 'Unit 6', 'Spray Room'],
+  units: ['Unit 1', 'Unit 2', 'Unit 3', 'Unit 4', 'Unit 5', 'Unit 6', 'Spray Room', 'Unit 1 Offices', 'Unit 2 Offices', 'Customer Care Offices', 'Accounts Offices', 'Dispatch Office', 'Aluminium Office', 'Reception Area'],
   priorities: ['Low', 'Medium', 'High'],
 
   complianceFooter: 'This inspection supports the employer duty of care under HASAWA 1974 s.2 and the requirement for a suitable and sufficient risk assessment under MHSWR 1999 reg.3. It does not replace the judgement of a competent assessor.',
@@ -112,6 +112,24 @@ const AUDIT_CONFIG = {
         'Racking and stillage — loaded and empty systems are secure and undamaged',
         'Damaged racking is isolated and made unavailable'
       ]
-    }
-  ]
+    },
+    {
+      id: 'display_screen_equipment',
+      name: 'Visual Display Units (DSE)',
+      regulation: 'Health and Safety (Display Screen Equipment) Regulations 1992 (as amended)',
+      questions: [
+        'Display screens are stable, readable and positioned at a comfortable height and distance',
+        'Screens can be adjusted for brightness and contrast and are free from distracting reflections',
+        'Keyboards are separate or suitably adjustable, with sufficient space to rest hands',
+        'Mouse or other pointing device is positioned within comfortable reach',
+        'Work chairs are stable, adjustable and provide appropriate back support',
+        'Desk surfaces provide adequate space for screens, paperwork and work equipment',
+        'Sufficient legroom and freedom of movement are available beneath workstations',
+        'Footrests or document holders are available where identified as necessary',
+        'Lighting is adequate and glare from windows or overhead lights is controlled',
+        'Trailing cables and electrical connections do not create hazards',
+        'DSE users have suitable breaks or changes of activity during prolonged screen use',
+        'DSE workstation assessments, information, training and eye-test arrangements are in place where required'
+      ]
+    }  ]
 };
