@@ -169,6 +169,16 @@ function getStatusBadge(s) {
 }
 
 // ── Main render dispatcher ─────────────────────────────────────────────────────
+
+function inspectionAreaBanner(insp) {
+  const areas = Array.isArray(insp.units) && insp.units.length ? insp.units : [];
+  const label = areas.length ? areas.join(' · ') : 'No inspection area selected';
+  return `<div class="inspection-area-banner" role="note">
+    <div class="inspection-area-caption">INSPECTION AREA</div>
+    <div class="inspection-area-name">${esc(label)}</div>
+  </div>`;
+}
+
 function render() {
   switch (state.screen) {
     case 'home': renderHome(); break;
@@ -373,6 +383,7 @@ function renderAudit() {
     </div>`;
 
   el('app-content').innerHTML = `
+    ${inspectionAreaBanner(insp)}
     <div class="audit-score-banner">
       <div>
         <div class="audit-score-big">${pctTxt}</div>
@@ -513,6 +524,7 @@ function renderSection() {
   });
 
   el('app-content').innerHTML = `
+    ${inspectionAreaBanner(state.inspection)}
     <div style="padding:10px 12px;font-size:12px;color:var(--text-muted)">${esc(sec.regulation)}</div>
     <div class="card" style="margin:0 12px">${rows}</div>`;
 
@@ -552,6 +564,7 @@ function renderQuestion() {
   const actionsHtml = buildActionsHtml(q.actions, si, qi, q.status);
 
   el('app-content').innerHTML = `
+    ${inspectionAreaBanner(state.inspection)}
     <div class="question-header-card">
       <div class="q-num">Q${qi + 1} of ${totalQ} &bull; ${esc(sec.name)}</div>
       <div class="q-title">${esc(q.text)}</div>
@@ -850,6 +863,7 @@ function renderReport() {
   });
 
   el('app-content').innerHTML = `
+    ${inspectionAreaBanner(insp)}
     <div class="report-score-card">
       <div class="report-score-pct">${pct}</div>
       <div class="report-score-sub">${overall.pass} of ${overall.scored} questions passed</div>
