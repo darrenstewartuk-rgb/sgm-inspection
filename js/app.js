@@ -48,6 +48,33 @@ function createAction() {
   };
 }
 
+
+// Align historical locally saved inspections with newly introduced checklist
+// sections without disturbing their recorded answers, notes, actions or photos.
+function normalizeInspection(insp) {
+  if (!insp) return insp;
+  const previous = new Map((insp.sections || []).map(sec => [sec.id, sec]));
+  insp.sections = AUDIT_CONFIG.sections.map(sec => {
+    const old = previous.get(sec.id);
+    const existing = old && Array.isArray(old.questions) ? old.questions : [];
+    return {
+      id: sec.id,
+      questions: sec.questions.map((label, i) => {
+        const prior = existing.find(q => q.text === label) || existing[i];
+        return prior ? {
+          ...prior,
+          text: label,
+          photos: Array.isArray(prior.photos) ? prior.photos : [],
+          actions: Array.isArray(prior.actions) ? prior.actions : []
+        } : { text: label, status: null, notes: '', photos: [], actions: [] };
+      })
+    };
+  });
+  insp.units = Array.isArray(insp.units) ? insp.units : [];
+  insp.generalComment = insp.generalComment || { text: '', rating: null };
+  return insp;
+}
+
 // ── Scoring ────────────────────────────────────────────────────────────────────
 function calcSectionScore(sectionData) {
   let pass = 0, scored = 0, flagged = 0, actions = 0;
@@ -208,7 +235,7 @@ async function renderHome() {
   document.querySelectorAll('.inspection-row').forEach(row => {
     row.addEventListener('click', async () => {
       const id = parseInt(row.dataset.id);
-      state.inspection = await DB.load(id);
+      state.inspection = normalizeInspection(await DB.load(id));
       navigate('audit');
     });
   });
@@ -542,10 +569,15 @@ function renderQuestion() {
 
     <div class="spacer"></div>
     <div class="field-section">
-      <div class="field-section-title">Photos</div>
+      <div class="field-section-title">Photographic Evidence</div>
       <div class="field-section-body">
         ${photoGrid}
-        <input type="file" id="photo-input" accept="image/*" capture="environment" multiple style="display:none">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+          <button type="button" class="btn btn-primary btn-sm" id="take-photo-btn">📷 Take Photo</button>
+          <button type="button" class="btn btn-secondary btn-sm" id="choose-photo-btn">Choose Photo</button>
+        </div>
+        <input type="file" id="photo-input" accept="image/*" multiple style="display:none">
+        <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none">
       </div>
     </div>
 
@@ -579,6 +611,9 @@ function renderQuestion() {
     pb.addEventListener('click', () => el('photo-input').click());
   });
   el('photo-input').addEventListener('change', e => handlePhotoInput(e, q, si, qi));
+  el('take-photo-btn').addEventListener('click', () => el('camera-input').click());
+  el('choose-photo-btn').addEventListener('click', () => el('photo-input').click());
+  el('camera-input').addEventListener('change', e => handlePhotoInput(e, q, si, qi));
 
   document.querySelectorAll('[data-del-photo]').forEach(btn => {
     btn.addEventListener('click', () => {
